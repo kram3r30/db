@@ -43,18 +43,24 @@
         employees.map((employee) => {
           const li = document.createElement("li");
           li.innerHTML = `${employee.name} - $${employee.salary}
-            <input type="checkbox" id=${employee.id} />
-          `;
+                  <input type="checkbox" id=${employee.id} />
+                `;
           document.querySelector("ul").appendChild(li);
         });
 
-        const deleteCheckboxes = document.querySelectorAll(
-          "input[type=checkbox]"
-        );
+        function deleteEmployee(e) {
+          fetch(`http://localhost:3000/employees/${e.target.id}`, {
+            method: "DELETE",
+          })
+            .then((response) => response.json())
+            .then((json) => console.log("response", json));
+        }
+        const deleteCheckboxes = document.querySelector("input[type=checkbox]");
+        deleteCheckboxes.addEventListener("change", deleteEmployee);
 
         deleteCheckboxes.forEach((checkbox) => {
           checkbox.addEventListener("change", (event) => {
-            if (event.target.checked && event.target.id === "1") {
+            if (event.target.checked) {
               const id = event.target.id;
               fetch(`http://localhost:3000/employees/${id}`, {
                 method: "DELETE",
